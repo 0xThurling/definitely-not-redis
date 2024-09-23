@@ -19,9 +19,16 @@ fn main() {
                 println!("accepted new connection");
 
                 let mut buffer = [0; 512];
-                let _ = _stream.read(&mut buffer);
 
-                let _ = _stream.write(b"+PONG\r\n").unwrap();
+                loop {
+                    let incoming_bytes = _stream.read(&mut buffer).unwrap();
+
+                    if incoming_bytes == 0 {
+                        break;
+                    }
+
+                    _stream.write(b"+PONG\r\n").unwrap();
+                }
             }
             Err(e) => {
                 println!("error: {}", e);
